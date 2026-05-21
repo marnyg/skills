@@ -6,7 +6,11 @@ Status legend: 📝 raw idea · 🛠 in workshop · ✅ shipped to `skills/`
 
 ---
 
-## 📝 docs
+## ✅ docs-scaffold + docs-update
+
+Shipped to `skills/docs-scaffold/` and `skills/docs-update/`. See those SKILL.md files. Workshop notes preserved below for context.
+
+## 📝 docs (workshop notes)
 
 **Goal:** Describe the desired docs structure and layout for a repo, and help the agent navigate/maintain it.
 
