@@ -188,6 +188,31 @@ Chosen: **<Option X>**, because <!-- key reason tied to the drivers -->.
 <!-- How will we know this decision was right? What would invalidate it? -->
 ```
 
+## Self-verification
+
+Before reporting (step 10), **audit your own work** against this checklist. If any item fires, fix it before reporting to the user. Agent agreeableness is the failure mode this section defends against.
+
+### Dismissed findings
+
+- A contradiction you talked yourself into accepting ("it's a narrow case", "it bends the invariant but doesn't really violate it")
+- A significant decision you decided didn't need an ADR ("it's significant but kind of obvious" — if obvious to you now, future readers won't have your context)
+- An exploration-log section you assumed was still active without checking the ADRs
+- A `notes.md` operational quirk you noticed but didn't add ("it's probably temporary")
+- A `focus.md` that no longer ties to any goal in `goals.md`, which you left rather than surfacing
+- A budget warning skipped because "the user knows"
+
+### Premature closure phrases
+
+If any of these appear in your reasoning, re-open the question:
+
+- _"This change doesn't really violate the invariant"_ — either the invariant excludes this case (update the invariant) or the change violates it (halt and escalate). Bending is violating.
+- _"The decision is firm enough to skip the ADR"_ — firmness isn't the bar. The three criteria (hard to reverse, surprising without context, real trade-off) are. Check each.
+- _"The exploration-log section is probably resolvable"_ — ask the user. Don't decide unilaterally.
+- _"Notes are clean"_ — did you actually scan the diff and recent context for operational weather, or assume?
+- _"Budget is fine"_ — did you count lines, or eyeball?
+- _"Sub-scope invariants don't conflict with parent"_ — did you read both, or skip the comparison?
+- _"This belongs in handoff"_ — handoff is what happened + what's next, not a task list. If you're writing tasks, they belong in the user's tracker, not git.
+
 ## Failure modes to avoid
 
 - **Empty updates.** If nothing meaningfully changed, don't write. Skip the skill.

@@ -128,6 +128,33 @@ When the session ends (user stops, or branch tree exhausted):
 3. **Suggest** `/skill:docs-update` to refresh `handoff.md` and `focus.md` with the session's state.
 4. **Final summary**: print what was written where (glossary entries added, invariants added, exploration-log sections touched, ADRs drafted, sub-scopes affected).
 
+## Self-verification
+
+Before each branch checkpoint summary AND before wrap-up, **audit your own grilling** against this checklist. If any item fires, fix it before continuing or finishing. The user's agreeableness and your own are both failure modes here — catch them.
+
+### Dismissed findings
+
+- A weak answer you accepted because the user seemed satisfied (satisfaction ≠ precision)
+- An alternative you mentioned but didn't actually probe ("X was considered" without why-not)
+- A term you let pass without canonicalizing ("account" / "user" / "customer" used interchangeably)
+- A claim about the codebase you didn't verify by reading code
+- An invariant you wrote to `invariants.md` without the explicit confirm step
+- An ADR drafted before the decision was actually firm, or without all three criteria met
+- A branch you marked "resolved" without populating pinned/ruled-out/open
+
+### Premature closure phrases
+
+If any of these appear in your reasoning or output, re-open:
+
+- _"The user seems satisfied with this answer"_ — satisfaction is not articulation. Did they state the answer with precision, or just nod?
+- _"We've explored enough alternatives"_ — list them. If the list is "X (chosen) and... not sure what else", you haven't explored.
+- _"This is probably an invariant"_ — ask the confirm question. "Probably" is not "confirmed project-wide invariant".
+- _"The decision feels solid, let's write the ADR"_ — ADRs are end-of-session. Mid-session "solid" is wishful.
+- _"The codebase probably supports X"_ — read the code. Don't probably.
+- _"The user implied Y"_ — implication is not statement. Ask.
+- _"We can resolve this offline"_ — offline is a deferral. Either pin it now or explicitly add it to the open list for the branch summary.
+- _"This term is close enough to the existing glossary entry"_ — close enough is glossary drift. Either match the existing term or sharpen the distinction.
+
 ## Failure modes to avoid
 
 - **Writing invariants without confirmation.** Every `invariants.md` write must follow an explicit confirm step.
