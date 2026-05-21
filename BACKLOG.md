@@ -57,7 +57,13 @@ Components:
 
 ---
 
-## 📝 grill-me (refine existing)
+## ✅ grill-me (refined + ported)
+
+Shipped to `skills/grill-me/`. Refined version of the original `~/.claude/skills/grill-me/skill.md` with: tighter mode-disambiguation rule (default to context, ask rarely), explicit exit criteria per mode, anti-patterns section, lazy-vs-genuine-uncertainty distinction, mode-transition protocol, cross-reference to `grill-design` as sibling. Filename now `SKILL.md` (spec-compliant).
+
+**Plumbing:** the original at `~/.claude/skills/grill-me/skill.md` is now stale. Decide: symlink to this repo, point pi settings at this repo's `skills/` dir, or just delete the old one and rely on this repo being discovered. Workshop notes preserved below.
+
+## 📝 grill-me (workshop notes)
 
 Current version lives at `~/.claude/skills/grill-me/skill.md` — already two modes:
 - **Critique mode** — adversarial stress-test of a plan/code/decision
