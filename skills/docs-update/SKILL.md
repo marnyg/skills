@@ -34,6 +34,12 @@ Read:
 - `git diff` / `git log` since the last handoff timestamp (or last session) — what actually changed
 - For monorepos: identify if work touched sub-scopes with their own `docs/`. If yes, you will repeat steps 2–4 in each affected scope.
 
+**Parent–child invariant sanity check.** While loading invariants from multiple scopes, scan for obvious contradictions between a sub-scope invariant and a parent invariant (e.g. parent says "all auth uses SSO", sub-scope says "this service uses API keys"). Semantic comparison is hard — don't be exhaustive, just flag anything that looks contradictory at a glance:
+
+> "Possible split-brain invariants: parent `<path>` says '<X>', sub-scope `<path>` says '<Y>'. These look contradictory. Reconcile before continuing — invariants are invariant."
+
+Do not proceed until resolved.
+
 ### 2. Contradiction check (do this first — it can halt the rest)
 
 Scan the diff against every relevant `invariants.md`. If any change appears to violate an invariant:
@@ -110,14 +116,25 @@ If yes:
 
 If the diff touched files under a sub-scope with its own `docs/` (e.g. `services/auth/docs/`), repeat steps 2–7 against that sub-scope's `day-to-day/` and `technical/`. Only recurse into scopes actually touched.
 
-### 9. Report
+### 9. Budget check
+
+For each scope whose `desired-state/` you loaded this session, count total lines across `goals.md`, `invariants.md`, `domain-model.md`. If any scope exceeds **~300 lines**, surface:
+
+> "Scope `<path>` desired-state is <N> lines (budget ~300). Consider pruning or splitting before it becomes noisy to load every session."
+
+Also flag if you traversed more than ~3 scope levels deep to reach the work — that's a signal the tree may be over-nested.
+
+Don't auto-prune. Surface and let the user decide.
+
+### 10. Report
 
 Print a tight summary:
 - Files updated (path + 1-line reason)
 - Files left alone (and why, if non-obvious)
-- Contradictions found (if any — should already have halted at step 2)
+- Contradictions found (if any — should already have halted at step 2 or step 1's parent–child check)
 - ADRs drafted
 - Sub-scopes recursed into
+- Budget warnings (from step 9)
 - Anything that needs human attention (stale notes pruning, exploration-log deletions awaiting confirmation)
 
 ## MADR ADR template

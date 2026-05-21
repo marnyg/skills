@@ -68,6 +68,18 @@ Four buckets, each with a distinct purpose:
 
 4. **Offer to scaffold a sub-scope.** If this is a monorepo (detect via `services/`, `apps/`, `packages/`, workspace config), ask the user whether they want any sub-scope scaffolded now. Do not auto-scaffold sub-scopes.
 
+   **Sub-scope layout differs from root** — sub-scopes do NOT get `context/` (mission/users/owners are project-level, not service-level). A sub-scope `docs/` contains only:
+
+   ```
+   <scope>/docs/
+   ├── README.md            # links up to parent + lists any further sub-scopes
+   ├── desired-state/       # goals.md, invariants.md, domain-model.md (scoped to this service)
+   ├── technical/           # adrs/, guides/ — same shape as root
+   └── day-to-day/          # handoff, focus, notes, exploration-log — same shape as root
+   ```
+
+   Also: after creating a sub-scope, **add a link to it** in the parent `docs/README.md` under the sub-scopes section, so the agent's link-walking discovers it.
+
 5. **Report.** Print:
    - Files created
    - Files skipped (already existed)
