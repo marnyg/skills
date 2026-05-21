@@ -92,6 +92,16 @@ Shipped to `skills/grill-design/`. Renamed from `grill-with-docs` to avoid colli
 
 ---
 
+## ✅ hickey + lowy (imported)
+
+Imported from [nrdxp/predicate](https://github.com/nrdxp/predicate) with minimal adaptation. Pair of code-review skills:
+- `hickey` — spatial/simplicity lens (Rich Hickey's "Simple Made Easy")
+- `lowy` — temporal/volatility lens (Juval Löwy's *Righting Software*)
+
+Edits from upstream: dropped non-standard `trigger:` frontmatter field, expanded descriptions with invocation phrases, repointed sibling cross-references from `/hickey` to `/skill:hickey`, dropped `engineering.md` §8.1 reference (predicate-internal). Attribution preserved.
+
+**Bonus follow-up TODO:** retrofit the Self-Verification Checklist + Premature Closure Phrases technique into our existing skills (`docs-update`, `grill-design`, `grill-me`, possibly `docs-scaffold`). Each is high-leverage for catching agent rationalization.
+
 ## Workshop order (proposed)
 
 1. **docs** — foundational; other skills will want to write into this structure.
