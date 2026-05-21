@@ -71,7 +71,11 @@ Current version lives at `~/.claude/skills/grill-me/skill.md` — already two mo
 
 ---
 
-## 📝 grill-with-docs (Matt Pocock-style)
+## ✅ grill-design (was: grill-with-docs)
+
+Shipped to `skills/grill-design/`. Renamed from `grill-with-docs` to avoid collision with our `docs-*` skill namespace and pair symmetrically with `grill-me`. Adapted Matt Pocock's approach to write into our richer `docs/` layout (glossary → domain-model, hard constraints → invariants, ruled-out alternatives → exploration-log, decisions → ADRs). Workshop notes preserved below.
+
+## 📝 grill-with-docs (workshop notes)
 
 **Goal:** Use grilling as a design/conceptual outlining tool — produce docs as a byproduct of being grilled.
 
