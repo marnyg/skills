@@ -178,7 +178,16 @@ In monorepos, services/apps/packages may have their own `docs/` mirroring this l
 
 <!-- High-level entities and how they relate. Conceptual, not an ERD —
      no attributes, no cardinality, no FKs. Just nouns and relationships.
-     Use Mermaid. Add a short glossary if terms are non-obvious. -->
+     Use Mermaid. Add a short glossary if terms are non-obvious.
+
+     Inclusion bar: a concept belongs here if it would come up in a
+     conversation with a domain expert. Implementation machinery
+     (caches, queues, DTOs, adapters) does not.
+
+     Kept in sync by /skill:docs-update: new concepts and relationships
+     in code get proposed here; renames/splits/removals get flagged as
+     drift. If code and model disagree on a name, that's a bug in one
+     of them — surface it, don't ignore it. -->
 
 ```mermaid
 classDiagram
@@ -332,8 +341,10 @@ This repo uses a structured docs layout (see `docs/README.md`). Follow these rul
 
 3. **Invariants are hard constraints.** If a change would violate one in any `desired-state/invariants.md`, stop and escalate to the user — do not silently resolve. Either the invariant is wrong (update it) or the change is wrong (revisit).
 
-4. **At the end of meaningful work** (feature done, milestone hit, before PR, or when the user signals end-of-session), invoke `/skill:docs-update` to refresh `day-to-day/` files and prompt for ADRs.
+4. **The domain model is the shared vocabulary.** Name things in code using the terms in `desired-state/domain-model.md`. If your work introduces a domain concept or relationship that isn't modeled, or renames/splits/removes a modeled one, surface it to the user — don't leave the model silently stale. (`/skill:docs-update` also checks this, but catching it while the context is fresh is better.)
 
-5. **Budget:** keep each scope's `desired-state/` under ~300 lines total. Traverse at most ~3 scopes deep per session. If you're hitting the budget, propose pruning.
+5. **At the end of meaningful work** (feature done, milestone hit, before PR, or when the user signals end-of-session), invoke `/skill:docs-update` to refresh `day-to-day/` files, sync the domain model, and prompt for ADRs.
+
+6. **Budget:** keep each scope's `desired-state/` under ~300 lines total. Traverse at most ~3 scopes deep per session. If you're hitting the budget, propose pruning.
 <!-- docs-skill:end -->
 ```

@@ -1,6 +1,6 @@
 ---
 name: docs-update
-description: Updates the structured docs/ tree after a meaningful unit of work — refreshes handoff.md and focus.md, prunes notes.md, evaluates exploration-log.md entries for deletion when ADRs land, prompts for new ADRs on significant decisions, and checks the change against invariants. Use after completing a feature, hitting a milestone, before opening a PR, when the user says "wrap up" / "update docs", or when invoked as /skill:docs-update.
+description: Updates the structured docs/ tree after a meaningful unit of work — refreshes handoff.md and focus.md, prunes notes.md, evaluates exploration-log.md entries for deletion when ADRs land, prompts for new ADRs on significant decisions, checks the change against invariants, and syncs desired-state/domain-model.md with domain concepts and relationships introduced or changed in code. Use after completing a feature, hitting a milestone, before opening a PR, when the user says "wrap up" / "update docs", or when invoked as /skill:docs-update.
 ---
 
 # docs-update
@@ -29,6 +29,7 @@ The repo must have the `docs/` layout from `docs-scaffold`. If `docs/day-to-day/
 Read:
 - `docs/desired-state/invariants.md` (and any sub-scope invariants for paths touched this session) — needed for the contradiction check
 - `docs/desired-state/goals.md` — for the focus.md goal link
+- `docs/desired-state/domain-model.md` (and sub-scope models for paths touched) — needed for the domain-model sync
 - `docs/day-to-day/handoff.md`, `focus.md`, `notes.md`, `exploration-log.md` — current state
 - `docs/technical/adrs/` — list existing ADRs (filenames are enough)
 - `git diff` / `git log` since the last handoff timestamp (or last session) — what actually changed
@@ -98,7 +99,19 @@ If user confirms, delete the section.
 
 Format per entry: `- YYYY-MM-DD — Tried <X>. Ruled out: <reason>.` (or "Considered", "Paused", "Landed on").
 
-### 7. Detect significant decisions → prompt for ADR
+### 7. Sync `desired-state/domain-model.md`
+
+Compare the session's diff against the domain model. Three checks:
+
+**Unmodeled concepts:** Did the session introduce a domain noun — entity, aggregate, core term appearing in type names, table names, API resources — that is absent from `domain-model.md`? Inclusion bar: *would this concept come up in a conversation with a domain expert?* Implementation machinery (caches, queues, DTOs, adapters, worker pools) does not qualify. For each hit, propose: a node in the Mermaid diagram, plus a glossary line if the term is non-obvious.
+
+**Unmodeled relationships:** Did the change wire two already-modeled concepts together in a way the diagram doesn't show (new reference, ownership, lifecycle dependency)? Propose adding the edge.
+
+**Drift:** Was a modeled concept renamed, split, merged, or removed in code? Flag it and propose the corresponding model update. If code and model now use different names for the same thing, that is glossary drift — surface it, don't silently pick a side.
+
+Don't auto-write. Domain-model changes are semantic, not mechanical — propose each change and let the user confirm. If nothing qualifies, say so in the report rather than skipping silently.
+
+### 8. Detect significant decisions → prompt for ADR
 
 A "significant decision" means: a choice between non-trivial alternatives that has broad reach (architecture, protocol, library with API surface, design pattern affecting multiple modules). Library version bumps and tool swaps don't count.
 
@@ -112,11 +125,11 @@ If yes:
 - Pre-fill `Considered Options` from the matching exploration-log section if one exists.
 - Set Status to `Proposed`. User changes to `Accepted` when ready.
 
-### 8. Recurse into sub-scopes
+### 9. Recurse into sub-scopes
 
-If the diff touched files under a sub-scope with its own `docs/` (e.g. `services/auth/docs/`), repeat steps 2–7 against that sub-scope's `day-to-day/` and `technical/`. Only recurse into scopes actually touched.
+If the diff touched files under a sub-scope with its own `docs/` (e.g. `services/auth/docs/`), repeat steps 2–8 against that sub-scope's `day-to-day/`, `desired-state/domain-model.md`, and `technical/`. Only recurse into scopes actually touched.
 
-### 9. Budget check
+### 10. Budget check
 
 For each scope whose `desired-state/` you loaded this session, count total lines across `goals.md`, `invariants.md`, `domain-model.md`. If any scope exceeds **~300 lines**, surface:
 
@@ -126,15 +139,16 @@ Also flag if you traversed more than ~3 scope levels deep to reach the work — 
 
 Don't auto-prune. Surface and let the user decide.
 
-### 10. Report
+### 11. Report
 
 Print a tight summary:
 - Files updated (path + 1-line reason)
 - Files left alone (and why, if non-obvious)
 - Contradictions found (if any — should already have halted at step 2 or step 1's parent–child check)
+- Domain-model changes proposed (or "model in sync" if none)
 - ADRs drafted
 - Sub-scopes recursed into
-- Budget warnings (from step 9)
+- Budget warnings (from step 10)
 - Anything that needs human attention (stale notes pruning, exploration-log deletions awaiting confirmation)
 
 ## MADR ADR template
@@ -190,7 +204,7 @@ Chosen: **<Option X>**, because <!-- key reason tied to the drivers -->.
 
 ## Self-verification
 
-Before reporting (step 10), **audit your own work** against this checklist. If any item fires, fix it before reporting to the user. Agent agreeableness is the failure mode this section defends against.
+Before reporting (step 11), **audit your own work** against this checklist. If any item fires, fix it before reporting to the user. Agent agreeableness is the failure mode this section defends against.
 
 ### Dismissed findings
 
@@ -198,6 +212,8 @@ Before reporting (step 10), **audit your own work** against this checklist. If a
 - A significant decision you decided didn't need an ADR ("it's significant but kind of obvious" — if obvious to you now, future readers won't have your context)
 - An exploration-log section you assumed was still active without checking the ADRs
 - A `notes.md` operational quirk you noticed but didn't add ("it's probably temporary")
+- A new domain noun in the diff you classified as implementation detail without applying the domain-expert test
+- A rename in code that you didn't check against the domain model's glossary
 - A `focus.md` that no longer ties to any goal in `goals.md`, which you left rather than surfacing
 - A budget warning skipped because "the user knows"
 
@@ -209,6 +225,7 @@ If any of these appear in your reasoning, re-open the question:
 - _"The decision is firm enough to skip the ADR"_ — firmness isn't the bar. The three criteria (hard to reverse, surprising without context, real trade-off) are. Check each.
 - _"The exploration-log section is probably resolvable"_ — ask the user. Don't decide unilaterally.
 - _"Notes are clean"_ — did you actually scan the diff and recent context for operational weather, or assume?
+- _"The domain model doesn't need updating"_ — did you actually list the new nouns and relationships in the diff and check each against the model, or assume?
 - _"Budget is fine"_ — did you count lines, or eyeball?
 - _"Sub-scope invariants don't conflict with parent"_ — did you read both, or skip the comparison?
 - _"This belongs in handoff"_ — handoff is what happened + what's next, not a task list. If you're writing tasks, they belong in the user's tracker, not git.
