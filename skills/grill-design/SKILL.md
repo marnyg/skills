@@ -73,7 +73,7 @@ The skill's job is to capture findings as they crystallize. Triggers and destina
 
 | Finding | Write trigger | Destination | Cadence |
 |---|---|---|---|
-| Glossary term | A domain term gets a canonical name + definition the user confirms | `docs/desired-state/domain-model.md` (glossary section) | **Inline** |
+| Glossary term | A domain term gets a canonical name + definition the user confirms | `docs/desired-state/domain-model.md` (glossary section — always the root file, even when the model is split into `domain-model/<area>.md`) | **Inline** |
 | Invariant | User confirms "this is always true across the project" (NOT just for this feature) | `docs/desired-state/invariants.md` | **Inline**, but only after explicit "Confirm as a project-wide invariant?" prompt |
 | Ruled-out alternative | An option is explicitly ruled out with a stated reason | `docs/day-to-day/exploration-log.md` | **Inline** when the rule-out happens |
 | Decision (ADR-worthy) | A decision lands AND meets all three criteria below | `docs/technical/adrs/NNNN-*.md` | **End of session**, drafted as `Proposed` |

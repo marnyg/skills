@@ -29,7 +29,7 @@ The repo must have the `docs/` layout from `docs-scaffold`. If `docs/day-to-day/
 Read:
 - `docs/desired-state/invariants.md` (and any sub-scope invariants for paths touched this session) — needed for the contradiction check
 - `docs/desired-state/goals.md` — for the focus.md goal link
-- `docs/desired-state/domain-model.md` (and sub-scope models for paths touched) — needed for the domain-model sync
+- `docs/desired-state/domain-model.md` (and sub-scope models for paths touched) — needed for the domain-model sync. If the model is split into `domain-model/<area>.md` files, load the root plus only the area files relevant to the diff.
 - `docs/day-to-day/handoff.md`, `focus.md`, `notes.md`, `exploration-log.md` — current state
 - `docs/technical/adrs/` — list existing ADRs (filenames are enough)
 - `git diff` / `git log` since the last handoff timestamp (or last session) — what actually changed
@@ -101,6 +101,8 @@ Format per entry: `- YYYY-MM-DD — Tried <X>. Ruled out: <reason>.` (or "Consid
 
 ### 7. Sync `desired-state/domain-model.md`
 
+If the model is split (`domain-model/<area>.md`), sync applies across the root and the loaded area files: new concepts go into the matching area file (or the root if no area fits); glossary lines always go into the root. Propose a new split/area file only when an existing file's readability demands it — never silently restructure.
+
 Compare the session's diff against the domain model. Three checks:
 
 **Unmodeled concepts:** Did the session introduce a domain noun — entity, aggregate, core term appearing in type names, table names, API resources — that is absent from `domain-model.md`? Inclusion bar: *would this concept come up in a conversation with a domain expert?* Implementation machinery (caches, queues, DTOs, adapters, worker pools) does not qualify. For each hit, propose: a node in the Mermaid diagram, plus a glossary line if the term is non-obvious.
@@ -131,7 +133,7 @@ If the diff touched files under a sub-scope with its own `docs/` (e.g. `services
 
 ### 10. Budget check
 
-For each scope whose `desired-state/` you loaded this session, count total lines across `goals.md`, `invariants.md`, `domain-model.md`. If any scope exceeds **~300 lines**, surface:
+For each scope whose `desired-state/` you loaded this session, count total lines across `goals.md` and `invariants.md` (`domain-model.md` is **exempt** from the budget — it may be as expressive as the domain requires; check it for drift, not length). If any scope exceeds **~300 lines**, surface:
 
 > "Scope `<path>` desired-state is <N> lines (budget ~300). Consider pruning or splitting before it becomes noisy to load every session."
 

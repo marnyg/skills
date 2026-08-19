@@ -26,7 +26,9 @@ Four buckets, each with a distinct purpose:
 
 **Recursive:** in monorepos, sub-scopes at conventional code boundaries (`services/*`, `apps/*`, `packages/*`) may have their own `docs/` mirroring this layout. Parent docs link to relevant children; agents follow links into subnodes whose code they're touching this session.
 
-**Budget:** ~300 lines per scope's `desired-state/`, agents traverse ~3 scopes deep per session max. Above that, prune or split.
+**Budget:** ~300 lines per scope's `desired-state/` (`goals.md` + `invariants.md`; `domain-model.md` is **exempt** — it should be as expressive as the domain requires, pruned for accuracy and drift, never for length), agents traverse ~3 scopes deep per session max. Above that, prune or split.
+
+**Domain-model split:** when `domain-model.md` outgrows single-file readability, it may split into `desired-state/domain-model/<area>.md` files. The root `domain-model.md` remains and keeps the one-sentence system summary, the top-level diagram, the glossary, and links to each area file. Traversal mirrors sub-scopes: agents read the root every session, and follow links only into areas the session's work touches.
 
 **Invariants are invariant:** if a sub-scope contradicts a parent's invariant, that is a split-brain design error to escalate to a human, not silently resolve.
 
@@ -179,6 +181,12 @@ In monorepos, services/apps/packages may have their own `docs/` mirroring this l
 <!-- High-level entities and how they relate. Conceptual, not an ERD —
      no attributes, no cardinality, no FKs. Just nouns and relationships.
      Use Mermaid. Add a short glossary if terms are non-obvious.
+
+     Exempt from the desired-state line budget: be as expressive as
+     the domain requires. Prune for accuracy and drift, never for
+     length. If this file outgrows single-file readability, split
+     detailed areas into domain-model/<area>.md and keep this file as
+     the root: summary, top-level diagram, glossary, links to areas.
 
      Inclusion bar: a concept belongs here if it would come up in a
      conversation with a domain expert. Implementation machinery
@@ -345,6 +353,6 @@ This repo uses a structured docs layout (see `docs/README.md`). Follow these rul
 
 5. **At the end of meaningful work** (feature done, milestone hit, before PR, or when the user signals end-of-session), invoke `/skill:docs-update` to refresh `day-to-day/` files, sync the domain model, and prompt for ADRs.
 
-6. **Budget:** keep each scope's `desired-state/` under ~300 lines total. Traverse at most ~3 scopes deep per session. If you're hitting the budget, propose pruning.
+6. **Budget:** keep each scope's `goals.md` + `invariants.md` under ~300 lines total; `domain-model.md` is exempt — as expressive as the domain requires, and it may split into `domain-model/<area>.md` files (root file = summary + diagram + glossary + links; follow links only into areas your work touches). Traverse at most ~3 scopes deep per session. If you're hitting the budget, propose pruning.
 <!-- docs-skill:end -->
 ```
